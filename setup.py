@@ -20,7 +20,7 @@ define_macros =         []
 from distutils.core import setup, Extension
 
 setup(name='pykpass',
-      version='0.5',
+      version='0.6',
       py_modules=['kpass'],
       ext_modules=[Extension('_kpass', ['kpass.c', 'wrap_kpass.c'],
                              include_dirs=include_dirs,

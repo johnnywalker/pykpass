@@ -12,7 +12,7 @@
 #include <syslog.h>
 #include <time.h>
 #include <unistd.h>
-#include <krb5.h>
+#include <krb5/krb5.h>
 
 #include "kpass.h"
 
@@ -185,7 +185,23 @@ int kpass(username, password, service, host, kt_pathname)
     }
 
     krb5_verify_init_creds_opt_init(&vic_options);
-    krb5_verify_init_creds_opt_set_ap_req_nofail(&vic_options, 1);
+    krb5_verify_init_creds_opt_set_ap_req_nofail(&vic_options, 0);
+
+    /* 
+     * if the service principal's realm is NULL and the returned credential's realm is not,
+     * the compare will always fail
+     */
+    if (!krb5_princ_realm(context, service_principal)->length && 
+            krb5_princ_realm(context, credentials.server)->length ) {
+        char *sz_def_realm = NULL;
+        err = krb5_get_default_realm(context, &sz_def_realm);
+        FAIL(err, "from krb5_get_default_realm");
+
+        krb5_free_data(context, krb5_princ_realm(context, service_principal));
+        krb5_princ_set_realm_length(context, service_principal, strlen(sz_def_realm));
+        krb5_princ_set_realm_data(context, service_principal, sz_def_realm);
+    }
+    
     err = krb5_verify_init_creds(context, &credentials, service_principal,
                                  keytab, 0, &vic_options);
     FAIL(err, "from krb5_verify_init_creds");
