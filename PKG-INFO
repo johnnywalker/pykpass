@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: pykpass
+Version: 0.5
+Summary: Kerberos5 Password Verification function
+Home-page: http://www.huque.com/software/pykpass/
+Author: Shumon Huque
+Author-email: shuque@upenn.edu
+License: UNKNOWN
+Description: pykpass is a C extension module to perform password verification
+        using Kerberos 5. It requires the MIT Kerberos 5 or Heimdal library
+Platform: UNKNOWN
